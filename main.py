@@ -1,6 +1,7 @@
 from modules.bankholiday import bankholiday
 from modules.weather import weather
 from datetime import datetime
+from decimal import Decimal
 
 
 def exercise1(bh=None, w=None):
@@ -51,19 +52,22 @@ def exercise2(bh=None, w=None):
             raise ValueError("The event " + eventName + " is not supported")
 
         dates = bh.getEventsDateByNameAndLocation(year=None,location=location,name=eventName)
-
+        dates.sort()
+        
         rsp = { "high": None ,"date": None }
         for date in dates:
             data = w.getTemperature(city=cityName,date=date)
-            
-            if data["high"] > rsp["high"]:
+            if data is None:
+                continue
+
+            if rsp["high"] is None or data["high"] > rsp["high"]:
                 rsp["high"] = data["high"]
                 rsp["date"] = data["date"]
 
     except Exception:
         raise
 
-    print("The highest temperature registered for " + eventName + " in " + cityName + " city is " + rsp["high"] + ", register in " + rsp["date"])
+    print("The highest temperature registered for " + eventName + " in " + cityName + " city is " + str(rsp["high"]) + ", register in " + str(rsp["date"]))
 
 
 def main():   
